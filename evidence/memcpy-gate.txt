@@ -1,0 +1,17 @@
+# memcpy IFUNC gate output (addresses are illustrative/redacted).
+# Target glibc: Debian GLIBC 2.41-12+deb13u4, same build in nginx 1.31.7/1.31.8 images.
+
+# 1) with the glibc tunable (successful configuration)
+$ docker exec <container> /tmp/memcpy_gate
+memcpy=0x7f... libc_base=0x7f... offset=0x162880
+variant=AVX/YMM (32-byte, geometry-equivalent to EVEX path)
+GLIBC_TUNABLES=glibc.cpu.hwcaps=AVX_Fast_Unaligned_Load
+
+# 2) without the tunable (negative control)
+$ docker exec -e GLIBC_TUNABLES= <container> /tmp/memcpy_gate
+memcpy=0x7f... libc_base=0x7f... offset=0xadd00
+variant=SSE/XMM (16-byte, incompatible)
+GLIBC_TUNABLES=(unset)
+
+# For reference, the profile-calibrated implementation is:
+#   offset=0x1727c0  EVEX/YMM (AVX-512 encoding, 32-byte)

