@@ -9,6 +9,8 @@ HTTP/2 RCE) in our lab, plus two problems we ran into along the way:
   it look mandatory, but what actually matters is the memory-access geometry
   of the `memcpy` implementation glibc picks. An official `GLIBC_TUNABLES`
   setting selects an equivalent AVX/YMM implementation on AVX-only CPUs.
+  Whether it works without the tunable depends on which `memcpy` the target
+  CPU selects by default (see [memcpy geometry](docs/en/02-memcpy-geometry.md)).
 - Versions without an official profile can be adapted. Using nginx 1.31.7 as
   an example, we recovered the nginx-image pointer deltas from the stripped
   binary and got the full chain working.

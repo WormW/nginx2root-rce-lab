@@ -86,6 +86,43 @@ The nginx 1.31.8 and 1.31.7 images ship the same libc (`9792e3cb…`), so the
 same tunable produced `0x162880` in both containers, and the libc-relative
 fields (`system` resolution, arena offsets) stayed valid.
 
+## What happens without GLIBC_TUNABLES
+
+`GLIBC_TUNABLES` is empty by default. Without it, glibc picks `memcpy` purely
+from the CPU's actual features, roughly in this priority:
+
+| CPU features | Selected implementation | Offset in our environment |
+|---|---|---|
+| AVX-512 (avx512f/vl, ...) | EVEX/YMM (`vmovdqu64`, 32-byte vectors) | `0x1727c0` |
+| AVX2 / AVX + ERMS | AVX/YMM or AVX/ERMS variant (32-byte vectors) | `0x162880` or `0x16b2c0` |
+| SSE only | SSE/XMM (`movdqu`, 16-byte vectors) | `0xadd00` |
+
+So "can it work without passing anything" depends on which implementation the
+target CPU selects by default:
+
+- If the default is already EVEX/YMM (`0x1727c0`) or a geometry-equivalent
+  AVX/YMM (`0x162880`), it works as-is. On a CPU with AVX-512, glibc defaults
+  to EVEX/YMM — that's exactly the situation Rapid7 calibrated against, and
+  no tunable is needed.
+- If the default lands on SSE/XMM (`0xadd00`) or another 16-byte-vector
+  implementation, it fails. We measured this: same IvyBridge VM, same nginx
+  1.31.8 image, no tunable → memcpy = `0xadd00` (SSE), and the exploit fails
+  at the second address-directed disclosure:
+
+  ```text
+  address disclosure capture: wire_bytes=0
+  ERROR exploit failed after 343.03s: address disclosure has 0 complete frame chains
+  ```
+
+  No marker.
+
+In other words, the tunable isn't a condition of the vulnerability itself —
+it's a way to steer glibc's memcpy selection onto the implementation the
+exploit was calibrated against. In practice, run `tools/memcpy_gate.c` first
+to see which offset resolves by default: `0x1727c0` or `0x162880` means you
+can go ahead; `0xadd00` or anything else means add the tunable above and
+restart the target.
+
 ## Practical checklist
 
 1. Extract `libc.so.6` from the target image and compare its SHA-256 with a

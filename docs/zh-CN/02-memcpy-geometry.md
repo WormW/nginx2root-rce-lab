@@ -78,6 +78,38 @@ nginx 1.31.8 和 1.31.7 镜像带的是同一个 libc（`9792e3cb…`），所�
 tunable 在两个容器里都得到 `0x162880`，libc 相对字段（`system` 解析、arena
 偏移）也继续有效。
 
+## 不传 GLIBC_TUNABLES 时会怎样
+
+`GLIBC_TUNABLES` 默认是空的。不传的时候，glibc 完全按 CPU 实际支持的特性
+自动选 `memcpy`，大致优先级是：
+
+| CPU 特性 | 选中的实现 | 我们环境里的偏移 |
+|---|---|---|
+| AVX-512（avx512f/vl 等） | EVEX/YMM（`vmovdqu64`，32B 向量） | `0x1727c0` |
+| AVX2 / AVX + ERMS | AVX/YMM 或 AVX/ERMS 变体（32B 向量） | `0x162880` 或 `0x16b2c0` |
+| 只有 SSE | SSE/XMM（`movdqu`，16B 向量） | `0xadd00` |
+
+所以"什么都不传能不能打"取决于目标 CPU 默认选到哪个实现：
+
+- 如果默认就是 EVEX/YMM（`0x1727c0`）或几何等价的 AVX/YMM（`0x162880`），
+  可以直接打。比如目标 CPU 有 AVX-512，glibc 默认就会选 EVEX/YMM——这正是
+  Rapid7 标定时的情况，不需要任何 tunable。
+- 如果默认落到 SSE/XMM（`0xadd00`）或其它 16 字节向量实现，就打不了。
+  我们实测过：同一台 IvyBridge VM、同一个 nginx 1.31.8 镜像，不传 tunable
+  时 memcpy = `0xadd00`（SSE），EXP 在第二次定址泄漏处失败：
+
+  ```text
+  address disclosure capture: wire_bytes=0
+  ERROR exploit failed after 343.03s: address disclosure has 0 complete frame chains
+  ```
+
+  没有 marker。
+
+换句话说，tunable 不是漏洞本身的条件，而是把 glibc 的 memcpy 选路"掰"到
+exploit 标定过的那种实现上的手段。实操上先跑一下 `tools/memcpy_gate.c`
+看默认解析到哪个偏移：是 `0x1727c0` 或 `0x162880` 就可以直接打；是
+`0xadd00` 或其它，再加上面那个 tunable 重启目标即可。
+
 ## 实操清单
 
 1. 从目标镜像提取 `libc.so.6`，和已标定 profile 的 SHA-256 对比。相同则

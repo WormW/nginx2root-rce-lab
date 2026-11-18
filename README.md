@@ -8,7 +8,8 @@
 - 没有 AVX-512 的机器也能打。公开 profile 里写的 `required_cpu_flags`
   容易让人以为必须 AVX-512，其实关键是 glibc 选中的 `memcpy` 实现的
   内存访问几何。用官方 `GLIBC_TUNABLES` 就能在只有 AVX 的 CPU 上选到
-  等价的 AVX/YMM 实现。
+  等价的 AVX/YMM 实现。不传 tunable 时能不能打，取决于目标 CPU 默认
+  选到哪个 `memcpy`（详见 [memcpy 几何](docs/zh-CN/02-memcpy-geometry.md)）。
 - 没有官方 profile 的版本也能适配。我们以 nginx 1.31.7 为例，从被 strip
   的二进制里把几个 nginx image 指针 delta 重新算出来，跑通了完整利用链。
 
